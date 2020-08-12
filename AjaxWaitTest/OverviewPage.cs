@@ -23,7 +23,7 @@ namespace AjaxWaitTest
 
         private By firstAjaxWait = By.ClassName("load-panel");
 
-        private By secondAjaxWait = By.ClassName("dx-overlay dx-widget dx-visibility-change-handler dx-loadpanel dx-state-invisible");
+        private By secondAjaxWait = By.ClassName("dx-overlay dx-widget dx-loadpanel");
 
         public void GoToPage()
         {
@@ -65,6 +65,34 @@ namespace AjaxWaitTest
         {
             Driver.SwitchTo().ParentFrame();
             Driver.SwitchTo().Frame(0);
+        }
+
+        public bool AssertLoaderOnePresent()
+        {
+            try
+            {
+                WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+                wait.Until(ExpectedConditions.ElementIsVisible(firstAjaxWait));
+                return true;
+            }
+            catch (OpenQA.Selenium.NoSuchElementException)
+            {
+                return false;
+            }
+        }
+
+        public bool AssertLoaderTwoPresent()
+        {
+            try
+            {
+                WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+                wait.Until(ExpectedConditions.ElementIsVisible(secondAjaxWait));
+                return true;
+            }
+            catch (OpenQA.Selenium.NoSuchElementException)
+            {
+                return false;
+            }
         }
     }
 }

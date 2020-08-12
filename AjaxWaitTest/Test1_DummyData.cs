@@ -6,18 +6,17 @@ using OpenQA.Selenium.Support.UI;
 
 namespace AjaxWaitTest
 {
-    public class Tests : TestBase
+    public class Test1 : TestBase
     {
         private OverviewPage _overviewPage;
         [SetUp]
         public void Setup()
         {
-            _overviewPage = new OverviewPage(Driver);
-            
+            _overviewPage = new OverviewPage(Driver); 
         }
 
         [Test]
-        public void Test1()
+        public void Test1_DummyData()
         {
             string expectedCountry = "Australia";
             _overviewPage.GoToPage();
