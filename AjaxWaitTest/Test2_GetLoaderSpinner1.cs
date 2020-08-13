@@ -15,7 +15,7 @@ namespace AjaxWaitTest
         }
 
         [Test]
-        public void Test2_LoaderCircle1()
+        public void Test()
         {
             _overviewPage.GoToPage();
             Assert.That(_overviewPage.AssertLoaderOnePresent());

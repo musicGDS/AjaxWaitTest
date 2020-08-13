@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
@@ -42,9 +43,11 @@ namespace MagnetoTesting.Infrastructure
             Driver.SwitchTo().Window(Driver.WindowHandles.Last());
         }
 
+
+
         public IWebElement WaitForElement(By by)
         {
-            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
             IWebElement result = wait.Until(ExpectedConditions.ElementExists(by));
             return result;
         }

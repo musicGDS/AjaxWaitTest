@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace AjaxWaitTest
 {
-    public class Test3_GetLoaderSpinner2 : TestBase
+    public class Test4_IJavascriptExecutor : TestBase
     {
         private OverviewPage _overviewPage;
         [SetUp]
@@ -16,10 +16,15 @@ namespace AjaxWaitTest
         [Test]
         public void Test()
         {
+            string expectedCountry = "Australia";
             _overviewPage.GoToPage();
-            _overviewPage.AssertLoaderOnePresent();
-            //_overviewPage.SwitchToIframe();
-            Assert.That(_overviewPage.AssertLoaderTwoPresent());
+            _overviewPage.WaitForReady();
+
+            _overviewPage.SwitchToIframe();
+
+            //_overviewPage.WaitForAustralia();
+
+            Assert.That(expectedCountry == _overviewPage.GetFirstCountry());
         }
     }
 }

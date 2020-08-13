@@ -16,8 +16,8 @@ namespace MagnetoTesting.Infrastructure
             Driver.Manage().Window.Maximize();
             //Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
             //Driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(40);
-
         }
+
 
         [TearDown]
         public void _TearDown()

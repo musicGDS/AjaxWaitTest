@@ -6,7 +6,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace AjaxWaitTest
 {
-    public class Test1 : TestBase
+    public class Test1_WaitUntil : TestBase
     {
         private OverviewPage _overviewPage;
         [SetUp]
@@ -16,21 +16,15 @@ namespace AjaxWaitTest
         }
 
         [Test]
-        public void Test1_DummyData()
+        public void Test()
         {
             string expectedCountry = "Australia";
             _overviewPage.GoToPage();
             //_overviewPage.WaitTilAjax1Loaded();
-            
+
             _overviewPage.SwitchToIframe();
 
-            //_overviewPage.WaitTilAjax2Loaded();
-            //_overviewPage.HideMenu();
-
-
-            //_overviewPage.WaitForIframe();
-
-            Assert.That(expectedCountry == _overviewPage.GetFirstCountry());
+            Assert.That(expectedCountry == _overviewPage.GetFirstCountryWaitUntil());
         }
     }
 }

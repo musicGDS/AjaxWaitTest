@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using MagnetoTesting.Infrastructure;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -15,15 +16,16 @@ namespace AjaxWaitTest
         }
 
 
-        private By demoFrame = By.Id("demoFrame");
+        private By demoFrame = By.XPath("//div[@class='dx-datagrid-header-panel']");
 
         private By hideMenuButton = By.ClassName("menu-state-button");
 
-        private By firstCountry = By.XPath("//iframe//tr[4]//td[5]");
+        private By firstCountry = By.XPath("//tr[4]/td[5]");
 
         private By firstAjaxWait = By.ClassName("load-panel");
 
-        private By secondAjaxWait = By.ClassName("dx-overlay dx-widget dx-loadpanel");
+        private By secondAjaxWait = By.ClassName("dx-loadpanel-content-wrapper");
+
 
         public void GoToPage()
         {
@@ -40,12 +42,16 @@ namespace AjaxWaitTest
             new WebDriverWait(Driver, TimeSpan.FromSeconds(10)).Until(ExpectedConditions.ElementExists(secondAjaxWait));
         }
 
+        public string GetFirstCountryWaitUntil()
+        {
+            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+            IWebElement firstCountryElem = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(firstCountry));
+            return firstCountryElem.Text;
+        }
+
         public string GetFirstCountry()
         {
-            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(1));
-            // Kazkodel negaliu panaudoti firstCountry By kintamojo?
-            IWebElement firstCountry = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath("//tr[4]//td[5]")));
-            return firstCountry.Text;
+            return Text(firstCountry);
         }
 
         public void HideMenu()
@@ -85,7 +91,7 @@ namespace AjaxWaitTest
         {
             try
             {
-                WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+                WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
                 wait.Until(ExpectedConditions.ElementIsVisible(secondAjaxWait));
                 return true;
             }
@@ -93,6 +99,30 @@ namespace AjaxWaitTest
             {
                 return false;
             }
+        }
+
+        public void WaitForDemoFrame()
+        {
+            //Thread.Sleep(200);
+            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(50));
+            wait.Until(ExpectedConditions.ElementIsVisible(firstCountry));
+        }
+
+        public void WaitForReady()
+        {
+            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
+            wait.Until(driver => (bool)((IJavaScriptExecutor)driver).
+                    ExecuteScript("return jQuery.active == 0"));
+        }
+
+        public string FluentWait()
+        {
+            DefaultWait<IWebDriver> fluentWait = new DefaultWait<IWebDriver>(Driver);
+            fluentWait.Timeout = TimeSpan.FromSeconds(10);
+            fluentWait.PollingInterval = TimeSpan.FromMilliseconds(200);
+
+            IWebElement firstCountryElem = fluentWait.Until(ExpectedConditions.ElementIsVisible(firstCountry));
+            return Text(firstCountry);
         }
     }
 }
