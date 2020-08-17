@@ -20,11 +20,9 @@ namespace AjaxWaitTest
             _overviewPage.GoToPage();
             _overviewPage.SwitchToIframe();
 
-            //Turbut sita turejai omenyje, kai sakei, kad newrappinti elemento, o atskirai palaukti
-            //Bandziau lentele naudoti
-            _overviewPage.WaitForDemoFrame();
+            _overviewPage.FluentWait();
 
-            Assert.That(expectedCountry == _overviewPage.FluentWait());
+            Assert.That(expectedCountry == _overviewPage.GetFirstCountry());
         }
     }
 }

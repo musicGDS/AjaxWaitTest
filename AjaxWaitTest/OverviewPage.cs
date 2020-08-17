@@ -9,14 +9,18 @@ namespace AjaxWaitTest
 {
     public class OverviewPage : PageBase
     {
+        //private readonly IConfiguration Configuration;
+
+        //public UserController(IConfiguration configuration)
+        //{
+        //    Configuration = configuration;
+        //}
+
         public WebDriverWait wait; 
         public OverviewPage(IWebDriver Driver) : base(Driver) 
         {
             wait = new WebDriverWait(Driver, new TimeSpan(20));
         }
-
-
-        private By demoFrame = By.XPath("//div[@class='dx-datagrid-header-panel']");
 
         private By hideMenuButton = By.ClassName("menu-state-button");
 
@@ -26,9 +30,12 @@ namespace AjaxWaitTest
 
         private By secondAjaxWait = By.ClassName("dx-loadpanel-content-wrapper");
 
+        private By dataTable = By.ClassName("dx-datagrid-table");
+
 
         public void GoToPage()
         {
+            //string url = Configuration.URL;
             Driver.Navigate().GoToUrl("https://js.devexpress.com/Demos/WidgetsGallery/Demo/DataGrid/Overview/jQuery/Light/");
         }
 
@@ -59,13 +66,7 @@ namespace AjaxWaitTest
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
             IWebElement clickToCloseMenu = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(hideMenuButton));
             clickToCloseMenu.Click();
-        }
-
-        public void WaitForIframe()
-        {
-            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
-            IWebElement SearchResult = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(demoFrame));
-        }
+        }        
 
         public void SwitchToIframe()
         {
@@ -101,28 +102,57 @@ namespace AjaxWaitTest
             }
         }
 
-        public void WaitForDemoFrame()
+        public void WaitForData()
         {
             //Thread.Sleep(200);
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(50));
-            wait.Until(ExpectedConditions.ElementIsVisible(firstCountry));
+            wait.Until(ExpectedConditions.ElementIsVisible(dataTable));
         }
 
-        public void WaitForReady()
+        public void WaitForJQuery()
         {
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
             wait.Until(driver => (bool)((IJavaScriptExecutor)driver).
                     ExecuteScript("return jQuery.active == 0"));
         }
 
-        public string FluentWait()
+        public void CheckPageIsLoaded()
+        {
+            while (true)
+            {
+                bool ajaxIsComplete = (bool)(Driver as IJavaScriptExecutor).ExecuteScript("return jQuery.active == 0");
+                if (ajaxIsComplete)
+                    return;
+                Thread.Sleep(100);
+            }
+        }
+
+        public void WaitForReady()
+        {
+            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
+            wait.Until(driver =>
+            {
+                bool isAjaxFinished = (bool)((IJavaScriptExecutor)driver).
+                    ExecuteScript("return jQuery.active == 0");
+                try
+                {
+                    driver.FindElement(By.ClassName("spinner"));
+                    return false;
+                }
+                catch
+                {
+                    return isAjaxFinished;
+                }
+            });
+        }
+
+        public void FluentWait()
         {
             DefaultWait<IWebDriver> fluentWait = new DefaultWait<IWebDriver>(Driver);
-            fluentWait.Timeout = TimeSpan.FromSeconds(10);
+            fluentWait.Timeout = TimeSpan.FromSeconds(20);
             fluentWait.PollingInterval = TimeSpan.FromMilliseconds(200);
-
-            IWebElement firstCountryElem = fluentWait.Until(ExpectedConditions.ElementIsVisible(firstCountry));
-            return Text(firstCountry);
+            fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+            fluentWait.Until(ExpectedConditions.ElementExists(firstCountry));
         }
     }
 }

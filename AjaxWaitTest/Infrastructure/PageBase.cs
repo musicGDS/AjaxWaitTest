@@ -38,7 +38,6 @@ namespace MagnetoTesting.Infrastructure
 
         public void OpenNewTab()
         {
-            //šitus į page klasę reikia
             ((IJavaScriptExecutor)Driver).ExecuteScript("window.open();");
             Driver.SwitchTo().Window(Driver.WindowHandles.Last());
         }

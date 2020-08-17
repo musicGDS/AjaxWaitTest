@@ -18,10 +18,16 @@ namespace AjaxWaitTest
         {
             string expectedCountry = "Australia";
             _overviewPage.GoToPage();
+            //_overviewPage.WaitForJQuery();
+            //_overviewPage.CheckPageIsLoaded();
+
+            //_overviewPage.CheckPageIsLoaded();
+
+            //_overviewPage.SwitchToIframe();
+
+            //_overviewPage.WaitForReady();
+
             _overviewPage.WaitForReady();
-
-            _overviewPage.SwitchToIframe();
-
             //_overviewPage.WaitForAustralia();
 
             Assert.That(expectedCountry == _overviewPage.GetFirstCountry());

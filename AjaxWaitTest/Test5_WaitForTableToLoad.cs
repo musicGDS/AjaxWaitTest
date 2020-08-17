@@ -22,7 +22,7 @@ namespace AjaxWaitTest
 
             //Turbut sita turejai omenyje, kai sakei, kad newrappinti elemento, o atskirai palaukti
             //Bandziau lentele naudoti
-            _overviewPage.WaitForDemoFrame();
+            _overviewPage.WaitForData();
 
             Assert.That(expectedCountry == _overviewPage.GetFirstCountry());
         }
