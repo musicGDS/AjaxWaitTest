@@ -9,12 +9,14 @@ namespace AjaxWaitTest
 {
     public class OverviewPage : PageBase
     {
-        //private readonly IConfiguration Configuration;
 
-        //public UserController(IConfiguration configuration)
-        //{
-        //    Configuration = configuration;
-        //}
+        private readonly IConfiguration _config;
+
+        public AccountController(IConfiguration config)
+        {
+            _config = config;
+        }
+
 
         public WebDriverWait wait; 
         public OverviewPage(IWebDriver Driver) : base(Driver) 
@@ -35,7 +37,7 @@ namespace AjaxWaitTest
 
         public void GoToPage()
         {
-            //string url = Configuration.URL;
+            string url = System.Configuration.ConfigurationManager.AppSettings["URL"]; ;
             Driver.Navigate().GoToUrl("https://js.devexpress.com/Demos/WidgetsGallery/Demo/DataGrid/Overview/jQuery/Light/");
         }
 
@@ -88,62 +90,11 @@ namespace AjaxWaitTest
             }
         }
 
-        public bool AssertLoaderTwoPresent()
-        {
-            try
-            {
-                WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
-                wait.Until(ExpectedConditions.ElementIsVisible(secondAjaxWait));
-                return true;
-            }
-            catch (OpenQA.Selenium.NoSuchElementException)
-            {
-                return false;
-            }
-        }
-
         public void WaitForData()
         {
             //Thread.Sleep(200);
             WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(50));
             wait.Until(ExpectedConditions.ElementIsVisible(dataTable));
-        }
-
-        public void WaitForJQuery()
-        {
-            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
-            wait.Until(driver => (bool)((IJavaScriptExecutor)driver).
-                    ExecuteScript("return jQuery.active == 0"));
-        }
-
-        public void CheckPageIsLoaded()
-        {
-            while (true)
-            {
-                bool ajaxIsComplete = (bool)(Driver as IJavaScriptExecutor).ExecuteScript("return jQuery.active == 0");
-                if (ajaxIsComplete)
-                    return;
-                Thread.Sleep(100);
-            }
-        }
-
-        public void WaitForReady()
-        {
-            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
-            wait.Until(driver =>
-            {
-                bool isAjaxFinished = (bool)((IJavaScriptExecutor)driver).
-                    ExecuteScript("return jQuery.active == 0");
-                try
-                {
-                    driver.FindElement(By.ClassName("spinner"));
-                    return false;
-                }
-                catch
-                {
-                    return isAjaxFinished;
-                }
-            });
         }
 
         public void FluentWait()
